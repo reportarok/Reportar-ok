@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <meta name="theme-color" content="#1a2744" />
+  <meta name="description" content="ReportAR - Plataforma de denuncia ciudadana de sucesos de transporte" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="ReportAR" />
+  <title>ReportAR</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <style>
+    :root {
+      --azul:#1a2744;--azul2:#185FA5;--verde:#0F6E56;--violeta:#533AB7;--marron:#993C1D;
+      --bg:#f4f6f9;--bg2:#ffffff;--bg3:#eef1f6;--border:#dde2ea;
+      --text:#1a2030;--text2:#5a6478;--text3:#9aa3b2;
+      --radius:12px;--radius-sm:8px;--shadow:0 2px 12px rgba(26,39,68,0.10);
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    html,body{min-height:100vh;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:var(--text);}
+    .app-shell{max-width:600px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;}
+    .lang-menu{
+  display:none;
+  position:absolute;
+  top:72px;
+  right:12px;
+  background:#fff;
+  border:1px solid #dde2ea;
+  border-radius:8px;
+  box-shadow:0 2px 12px rgba(26,39,68,.10);
+  z-index:200;
+  overflow:hidden;
+}
+
+.lang-menu.open{
+  display:block;
+}
+
+.lang-opt{
+  padding:10px 16px;
+  font-size:13px;
+  cursor:pointer;
+  border-bottom:1px solid #dde2ea;
+}
+
+.lang-opt:last-child{
+  border-bottom:none;
+}
+.header{
+  background: var(--azul);
+  color: #fff;
+  padding: 18px 20px;
+  box-shadow: var(--shadow); 
+  margin-bottom: 10px;
+}
+
+.header-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  width:100%;
+}
+
+.header-title{
+  flex:1;
+}
+
+.header-title h1{
+  font-size:32px;
+  margin:0;
+}
+
+.header-title p{
+  margin-top:4px;
+  opacity:.9;
+}
+
+.header-right{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  gap:6px;
+  min-width:90px;
+} 
+    .lang-btn{
+  background:rgba(255,255,255,0.15);
+  border:none;
+  color:#fff;
+  border-radius:20px;
+  padding:3px 9px;
+  font-size:11px;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  gap:4px;
+}
+
+.lang-btn:hover{
+  background:rgba(255,255,255,0.25);
+}
+
+.lang-menu{
+  display:none;
+  position:absolute;
+  top:72px;
+  right:12px;
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  box-shadow:var(--shadow);
+  z-index:200;
+  overflow:hidden;
+}
+
+.lang-menu.open{
+  display:block;
+}
+
+.lang-opt{
+  padding:10px 16px;
+  font-size:13px;
+  cursor:pointer;
+  color:var(--text);
+  border-bottom:1px solid var(--border);
+}
+
+.lang-opt:last-child{
+  border-bottom:none;
+}
+
+.lang-opt:hover{
+  background:var(--bg3);
+}
+
+.lang-opt.active{
+  font-weight:700;
+  color:var(--azul);
+}
+    /* HEADER */
+.header{
+  background:var(--azul);
+  color:#fff;
+  padding:14px 16px 12px;
+  position:sticky;
+  top:0;
+  z-index:100;
+  box-shadow:var(--shadow);
+}
+
+.header-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:4px;
+}
+
+.header-title{
+  text-align:center;
+  flex:1;
+}
+
+    /* NAV */
+    .nav{display:flex;background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:78px;z-index:99;}
+    .nav button{flex:1;padding:10px 4px 8px;font-size:10px;background:none;border:none;border-bottom:2.5px solid transparent;cursor:pointer;color:var(--text2);transition:all 0.15s;display:flex;flex-direction:column;align-items:center;gap:4px;}
+    .nav button i{font-size:18px;}
+    .nav button.active{color:var(--azul);border-bottom-color:var(--azul);font-weight:700;}
+
+    /* SECTIONS */
+    .section{display:none;flex:1;padding:14px;background:var(--bg);}
+    .section.active{display:block;}
+
+    /* CONTACT */
+    .contact-strip{display:flex;gap:10px;margin-bottom:14px;}
+    .contact-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;padding:12px 8px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;border:none;text-decoration:none;}
+    .contact-btn:hover{opacity:0.88;}
+    .btn-wsp{background:#25D366;color:#fff;}
+    .btn-jst{
+  background:#0F6E56;
+  color:#fff;
+}
+
+.btn-tad{
+  background:#533AB7;
+  color:#fff;
+}
+    .btn-call{background:var(--azul2);color:#fff;}
+    .contact-btn i{font-size:18px;}
+
+    /* CATS */
+    .cats-label{font-size:12px;color:var(--text2);margin-bottom:10px;}
+    .cats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:6px;}
+    .cat-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--radius);padding:13px 10px;cursor:pointer;transition:all 0.15s;text-align:center;box-shadow:var(--shadow);}
+    .cat-card:hover{transform:translateY(-1px);}
+    .cat-card.sel{border-width:2px;}
+    .cat-card.automotor.sel{border-color:var(--azul2);background:#EAF2FB;}
+    .cat-card.aeronautico.sel{border-color:var(--violeta);background:#EEEDFE;}
+    .cat-card.maritimo.sel{border-color:var(--verde);background:#E1F5EE;}
+    .cat-card.ferroviario.sel{border-color:var(--marron);background:#FAECE7;}
+    .cat-card i{font-size:26px;display:block;margin-bottom:5px;}
+    .cat-card.automotor i{color:var(--azul2);}
+    .cat-card.aeronautico i{color:var(--violeta);}
+    .cat-card.maritimo i{color:var(--verde);}
+    .cat-card.ferroviario i{color:var(--marron);}
+    .cat-card span{font-size:13px;font-weight:600;display:block;}
+    .cat-card small{font-size:11px;color:var(--text2);}
+
+    /* FORMS */
+    .form-container{background:var(--bg2);border-radius:var(--radius);padding:16px;margin-top:12px;box-shadow:var(--shadow);display:none;}
+    .form-container.active{display:block;}
+    .form-header{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:var(--radius-sm);margin-bottom:14px;}
+    .form-header i{font-size:20px;}
+    .form-header span{font-size:14px;font-weight:600;color:#fff;}
+    .fh-automotor{background:var(--azul2);}
+    .fh-aeronautico{background:var(--violeta);}
+    .fh-maritimo{background:var(--verde);}
+    .fh-ferroviario{background:var(--marron);}
+    .field{margin-bottom:12px;}
+    .field label{font-size:11px;font-weight:600;color:var(--text2);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px;}
+    .field input,.field select,.field textarea{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:14px;color:var(--text);background:var(--bg);transition:all 0.15s;}
+    .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--azul2);background:#fff;}
+    .field textarea{height:72px;resize:none;}
+    .field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%235a6478' stroke-width='2'%3E%3Cpolygon points='6 9 12 15 18 9'%3E%3C/polygon%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:30px;appearance:none;}
+
+    /* MEDIA */
+    .media-upload-box{border:1.5px dashed var(--border);border-radius:var(--radius-sm);padding:14px 10px;background:var(--bg3);margin-bottom:12px;}
+    .media-upload-label{font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;}
+    .media-upload-row{display:flex;gap:8px;}
+    .media-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px 6px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg2);cursor:pointer;transition:all 0.15s;}
+    .media-btn:hover{border-color:var(--azul2);color:var(--azul2);}
+    .media-btn i{font-size:22px;}
+    .media-btn input{display:none;}
+    .media-preview{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+    .media-thumb{width:56px;height:56px;border-radius:6px;object-fit:cover;border:1px solid var(--border);}
+    .gps-result{font-size:11px;color:var(--verde);margin-top:6px;display:none;}
+
+    .submit-btn{width:100%;padding:13px;border:none;border-radius:var(--radius-sm);font-size:15px;font-weight:600;cursor:pointer;color:#fff;margin-top:4px;transition:opacity 0.15s;}
+    .submit-btn:hover{opacity:0.88;}
+    .sub-automotor{background:var(--azul2);}
+    .sub-aeronautico{background:var(--violeta);}
+    .sub-maritimo{background:var(--verde);}
+    .sub-ferroviario{background:var(--marron);}
+
+    /* FEED */
+    .notice{background:#EAF2FB;border:1px solid #b3d0ef;border-radius:var(--radius-sm);padding:10px 13px;font-size:12px;color:var(--azul2);display:flex;align-items:center;gap:8px;margin-bottom:14px;}
+    .denuncia-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px;box-shadow:var(--shadow);}
+    .d-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+    .d-cat{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;}
+    .d-cat i{font-size:15px;}
+    .d-cat.automotor i{color:var(--azul2);}
+    .d-cat.aeronautico i{color:var(--violeta);}
+    .d-cat.maritimo i{color:var(--verde);}
+    .d-cat.ferroviario i{color:var(--marron);}
+    .badge{display:inline-block;font-size:11px;padding:3px 9px;border-radius:20px;font-weight:600;}
+    .badge.aprobado{background:#E6F4D7;color:#3B6D11;}
+    .badge.pendiente{background:#FFF0DC;color:#854F0B;}
+    .badge.rechazado{background:#FDEAEA;color:#A32D2D;}
+    .d-meta{font-size:11px;color:var(--text3);margin-bottom:5px;}
+    .d-texto{font-size:13px;line-height:1.55;margin-bottom:8px;}
+    .d-media{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;}
+    .d-media img{width:72px;height:72px;object-fit:cover;border-radius:6px;border:1px solid var(--border);cursor:pointer;}
+    .d-media .vid-thumb{width:72px;height:72px;background:#1a2744;border-radius:6px;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+    .d-media .vid-thumb i{color:#fff;font-size:28px;}
+    .d-footer{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+    .d-loc{font-size:11px;color:var(--text2);display:flex;align-items:center;gap:3px;}
+
+    /* LIGHTBOX */
+    .lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:9000;align-items:center;justify-content:center;}
+    .lightbox.open{display:flex;}
+    .lightbox img{max-width:95vw;max-height:90vh;border-radius:8px;}
+    .lightbox-close{position:absolute;top:16px;right:16px;color:#fff;font-size:32px;cursor:pointer;background:none;border:none;}
+
+    /* ADMIN */
+    .admin-login-box{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);}
+    .admin-login-box h3{font-size:14px;font-weight:600;color:var(--text2);margin-bottom:14px;display:flex;align-items:center;gap:7px;}
+    .admin-login-box input{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:14px;margin-bottom:10px;outline:none;background:var(--bg);}
+    .admin-login-box button{width:100%;padding:11px;background:var(--azul);color:#fff;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:600;cursor:pointer;}
+    .stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;}
+    .stat{background:var(--bg2);border-radius:var(--radius-sm);padding:14px;text-align:center;box-shadow:var(--shadow);}
+    .stat-num{font-size:26px;font-weight:700;}
+    .stat-label{font-size:11px;color:var(--text2);margin-top:2px;}
+    .admin-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px;box-shadow:var(--shadow);}
+    .admin-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
+    .btn-aprobar{flex:1;padding:8px;background:#E6F4D7;color:#3B6D11;border:1px solid #97C459;border-radius:var(--radius-sm);font-size:12px;font-weight:600;cursor:pointer;min-width:70px;}
+    .btn-rechazar{flex:1;padding:8px;background:#FDEAEA;color:#A32D2D;border:1px solid #F09595;border-radius:var(--radius-sm);font-size:12px;font-weight:600;cursor:pointer;min-width:70px;}
+    .btn-word{flex:1;padding:8px;background:#EAF2FB;color:var(--azul2);border:1px solid #b3d0ef;border-radius:var(--radius-sm);font-size:12px;font-weight:600;cursor:pointer;min-width:70px;}
+    .admin-tabs{display:flex;gap:8px;margin-bottom:14px;}
+    .admin-tab{flex:1;padding:9px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:12px;font-weight:600;cursor:pointer;background:var(--bg3);color:var(--text2);text-align:center;}
+    .admin-tab.active{background:var(--azul);color:#fff;border-color:var(--azul);}
+
+    /*  */
+    .create-admin-box{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);margin-bottom:14px;}
+    .create-admin-box h3{font-size:13px;font-weight:600;margin-bottom:12px;color:var(--text2);display:flex;align-items:center;gap:6px;}
+    .create-admin-box input{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;margin-bottom:8px;background:var(--bg);outline:none;}
+    .btn-crear-admin{width:100%;padding:10px;background:var(--azul);color:#fff;border:none;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;}
+    .colab-item{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--bg3);border-radius:var(--radius-sm);margin-bottom:6px;font-size:13px;}
+    .role-badge{font-size:11px;padding:2px 8px;border-radius:20px;}
+    .role-principal{background:#FFF0DC;color:#854F0B;}
+    .role-colab{background:#E6F4D7;color:#3B6D11;}
+    .role-pendiente{background:#FDEAEA;color:#A32D2D;}
+    .btn-aprobar-colab{font-size:11px;padding:4px 10px;background:#E6F4D7;color:#3B6D11;border:1px solid #97C459;border-radius:20px;cursor:pointer;}
+    .btn-eliminar-colab{font-size:11px;padding:4px 10px;background:#FDEAEA;color:#A32D2D;border:1px solid #F09595;border-radius:20px;cursor:pointer;margin-left:4px;}
+
+    /* QR */
+    .qr-box{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:20px;text-align:center;box-shadow:var(--shadow);}
+    .qr-box h3{font-size:15px;font-weight:700;margin-bottom:6px;}
+    .qr-box p{font-size:12px;color:var(--text2);margin-bottom:16px;}
+    .qr-inner{display:inline-block;padding:12px;background:#fff;border-radius:var(--radius-sm);border:1px solid var(--border);margin-bottom:12px;}
+    .qr-url{font-size:12px;font-family:monospace;background:var(--bg3);border-radius:var(--radius-sm);padding:7px 14px;display:inline-block;color:var(--text2);margin-bottom:10px;}
+    .qr-phone{font-size:13px;color:var(--text2);margin-bottom:14px;display:flex;align-items:center;justify-content:center;gap:6px;}
+    .qr-options{display:flex;gap:8px;flex-wrap:wrap;}
+    .qr-opt{flex:1;min-width:90px;padding:10px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:12px;font-weight:600;cursor:pointer;background:var(--bg3);color:var(--text);transition:all 0.15s;}
+    .qr-opt:hover{background:var(--azul2);color:#fff;border-color:var(--azul2);}
+
+    footer{background:var(--azul);color:rgba(255,255,255,0.7);text-align:center;padding:14px 16px;font-size:11px;line-height:1.7;margin-top:auto;}
+    footer strong{color:#fff;}
+    .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--azul);color:#fff;padding:10px 22px;border-radius:24px;font-size:13px;font-weight:500;display:none;z-index:1000;}
+
+    @media(max-width:420px){
+      -title h1{font-size:19px;}
+      .cats{gap:8px;}
+      .contact-btn{font-size:11px;}
+      .qr-options,.admin-actions{flex-direction:column;}
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+
+  <div class="header">
+    <div class="header-top">
+      <div id="headerQR" style="width:70px;height:70px;background:#fff;padding:4px;border-radius:8px;display:flex;align-items:center;justify-content:center;"></div>
+      <div class="header-title">
+        <h1><i class="ti ti-alert-triangle"></i> ReportAR</h1>
+        <p data-i18n="subtitle">Plataforma de denuncia ciudadana de sucesos</p>
+      </div>
+
+      <div class="header-right">
+        <div class="fecha-badge" id="fechaHoy"></div>
+        <div class="fecha-badge" id="horaHoy"></div>
+        <button class="lang-btn" onclick="toggleLangMenu()"><i class="ti ti-world"></i><span id="langLabel">ES</span></button>
+      </div>
+    </div>
+    <div class="lang-menu" id="langMenu">
+      <div class="lang-opt active" onclick="setLang('es',this)">🇦🇷 Español</div>
+      <div class="lang-opt" onclick="setLang('en',this)">🇺🇸 English</div>
+      <div class="lang-opt" onclick="setLang('fr',this)">🇫🇷 Français</div>
+    </div>
+  </div>
+
+  <nav class="nav">
+    <button class="active" onclick="showTab('denunciar',this)"><i class="ti ti-plus"></i><span data-i18n="nav_report">Denunciar</span></button>
+    <button onclick="showTab('feed',this)"><i class="ti ti-news"></i><span data-i18n="nav_feed">Sucesos</span></button>
+    
+    <button onclick="showTab('admin',this)"><i class="ti ti-shield-lock"></i><span>Admin</span></button>
+  </nav>
+
+  <!-- DENUNCIAR -->
+  <div id="tab-denunciar" class="section active">
+    <div class="contact-strip">
+  <a class="contact-btn btn-wsp" href="https://wa.me/541139267174?text=Hola%2C%20quiero%20hacer%20una%20denuncia%20en%20ReportAR" target="_blank">
+    <i class="ti ti-brand-whatsapp"></i><span data-i18n="btn_wsp">WhatsApp</span>
+  </a>
+
+  <a class="contact-btn btn-jst" href="https://www.argentina.gob.ar/jst" target="_blank">
+    <i class="ti ti-scale"></i> JST
+  </a>
+
+  <a class="contact-btn btn-tad" href="https://www.argentina.gob.ar/solicitar-informacion-publica" target="_blank">
+    <i class="ti ti-file-description"></i> Denuncia x TAD
+  </a>
+
+  <a class="contact-btn btn-call" href="tel:08003330689">
+    <i class="ti ti-phone"></i> 0800-333-0689
+  </a>
+</div>
+    <p class="cats-label" data-i18n="select_mode">Seleccioná el modo del suceso:</p>
+    <div class="cats">
+      <div class="cat-card automotor sel" onclick="selCat('automotor')"><i class="ti ti-car"></i><span data-i18n="cat_auto">Automotor</span><small data-i18n="cat_auto_sub">Accidentes viales</small></div>
+      <div class="cat-card aeronautico" onclick="selCat('aeronautico')"><i class="ti ti-plane"></i><span data-i18n="cat_aero">Aeronáutico</span><small data-i18n="cat_aero_sub">Accidentes aéreos</small></div>
+      <div class="cat-card maritimo" onclick="selCat('maritimo')"><i class="ti ti-anchor"></i><span data-i18n="cat_mar">Marítimo / Fluvial</span><small data-i18n="cat_mar_sub">Embarcaciones</small></div>
+      <div class="cat-card ferroviario" onclick="selCat('ferroviario')"><i class="ti ti-train"></i><span data-i18n="cat_ferro">Ferroviario</span><small data-i18n="cat_ferro_sub">Trenes</small></div>
+    </div>
+
+    <!-- FORM AUTOMOTOR -->
+    <div class="form-container active" id="form-automotor">
+      <div class="form-header fh-automotor">
+        <i class="ti ti-car"></i>
+        <span data-i18n="form_auto">Modo Automotor</span>
+      </div>
+      <div class="field"><label data-i18n="lbl_suceso">Suceso</label><select><option value="">Seleccioná...</option><option>Accidente</option><option>Incidente</option><option>Emergencia</option><option>Otro</option></select></div>
+      <div class="field"><label data-i18n="lbl_tipo">Tipo de suceso</label><select><option value="">A confirmar</option><option>Averia</option><option>Choque</option><option>Foco Igneo</option><option>Incendio</option><option>Colision</option><option>Colision Multiple</option><option>Vuelco</option><option>Maniobra Abrupta</option><option>Vuelco de Acoplado</option><option>Despiste</option></select></div>
+      <div class="field"><label>Fecha</label><input type="date" id="auto-fecha"/></div>
+      <div class="field"><label>Hora (ARG)</label><input type="time"/></div>
+      <div class="field"><label>Lugar del suceso</label><input type="text" id="auto-lugar" placeholder="Dirección/Km, barrio/ciudad (Provincia)"/></div>
+      <div class="field"><label>Forma de notificación</label><select><option>Web</option><option>WhatsApp</option><option>Llamada</option><option>Otro</option></select></div>
+      <div class="field"><label>Vehículo/s involucrado/s</label>
+        <div id="vehiculos-list">
+          <div class="vehiculo-row" style="display:flex;gap:8px;margin-bottom:6px;">
+            <select id="auto-vehiculo" style="flex:1;padding:9px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;background:var(--bg);-webkit-appearance:none;">
+              <option value="">Tipo...</option><option>Automóvil</option><option>Camioneta</option><option>Camión</option><option>Motocicleta</option><option>Bicicleta</option><option>Colectivo</option><option>Otro</option>
+            </select>
+            <input id="auto-patente" type="text" placeholder="Patente" style="width:110px;padding:9px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;background:var(--bg);"/>
+          </div>
+        </div>
+        <button type="button" onclick="agregarVehiculo()" style="font-size:12px;color:var(--azul2);background:none;border:1px dashed var(--azul2);border-radius:var(--radius-sm);padding:6px 12px;cursor:pointer;">+ Agregar vehículo</button>
+      </div>
+      <div class="field"><label>Heridos</label><select id="auto-heridos"><option>No reportados</option><option>A confirmar</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5 o más</option></select></div>
+      <div class="field"><label>Fallecidos</label><select id="auto-fallecidos"><option>No reportados</option><option>A confirmar</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5 o más</option></select></div>
+      <div class="field"><label>Reseña</label><textarea id="auto-resena" placeholder="Indicá lo sucedido en pocas palabras..."></textarea></div>
+      <div class="media-upload-box">
+        <div class="media-upload-label">Adjuntar evidencia</div>
+        <div class="media-upload-row">
+          <label class="media-btn"><i class="ti ti-photo"></i>Foto<input type="file" accept="image/*" multiple onchange="previewMedia(this,'prev-auto')"/></label>
+          <label class="media-btn"><i class="ti ti-video"></i>Video<input type="file" accept="video/*" multiple onchange="previewMedia(this,'prev-auto')"/></label>
+          <div class="media-btn" onclick="getGPS('gps-auto')"><i class="ti ti-map-pin"></i>GPS</div>
+        </div>
+        <div class="media-preview" id="prev-auto"></div>
+        <div class="gps-result" id="gps-auto"></div>
+      </div>
+      <button type="button" class="submit-btn sub-automotor" onclick="enviar('automotor','auto-lugar','auto-resena')"><i class="ti ti-send" style="margin-right:6px"></i>Enviar denuncia</button>
+    </div>
+
+    <!-- FORM AERONAUTICO -->
+    <div class="form-container" id="form-aeronautico">
+      <div class="form-header fh-aeronautico"><i class="ti ti-plane"></i><span>Modo Aeronáutico</span></div>
+      <div class="field"><label>Suceso</label><select><option value="">Seleccioná...</option><option>Accidente</option><option>Incidente</option><option>Emergencia</option><option>Otro</option></select></div>
+      <div class="field"><label>Tipo de suceso</label><select id="aero-tipo"><option value="">A confirmar</option><option>Colisión en vuelo</option><option>Colisión con tierra (CFIT)</option><option>Aterrizaje fallido</option><option>Fuego en vuelo</option><option>Despresurización</option></select></div>
+      <div class="field"><label>Fecha</label><input type="date" id="aero-fecha"/></div>
+      <div class="field"><label>Hora (ARG)</label><input type="time"/></div>
+      <div class="field"><label>Lugar del suceso</label><input type="text" id="aero-lugar" placeholder="Dirección/Km, barrio/ciudad (Provincia)"/></div>
+      <div class="field"><label>Forma de notificación</label><select><option>Web</option><option>WhatsApp</option><option>Llamada</option><option>Otro</option></select></div>
+<div class="field">
+  <label>Aeronave (Tipo)</label>
+  <select id="aero-aeronave">
+    <option value="">Seleccioná...</option>
+    <option>Avión comercial</option>
+    <option>Avión de carga</option>
+    <option>Avioneta</option>
+    <option>Helicóptero</option>
+    <option>Drone</option>
+  </select>
+</div>   
+      <div class="field"><label>Matrícula</label><input type="text" id="aero-matricula" placeholder="LV-XXX"/>
+</div>
+<div class="field"><label>Operador (Línea aérea)</label><input type="text" id="aero-operador" placeholder="Nombre de la línea aérea u operador"/>
+</div>
+<div class="field"><label>Heridos</label><select id="mar-heridos"><option>No reportados</option><option>A confirmar</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5 o más</option></select></div>
+      
+      <div class="field"><label>Fallecidos</label><select><option>No</option><option>A confirmar</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5 o más</option></select></div>
+      <div class="field"><label>Reseña</label><textarea id="aero-resena" placeholder="Indicá lo sucedido en pocas palabras..."></textarea></div>
+      <div class="media-upload-box">
+        <div class="media-upload-label">Adjuntar evidencia</div>
+        <div class="media-upload-row">
+          <label class="media-btn"><i class="ti ti-photo"></i>Foto<input type="file" accept="image/*" multiple onchange="previewMedia(this,'prev-aero')"/></label>
+          <label class="media-btn"><i class="ti ti-video"></i>Video<input type="file" accept="video/*" multiple onchange="previewMedia(this,'prev-aero')"/></label>
+          <div class="media-btn" onclick="getGPS('gps-aero')"><i class="ti ti-map-pin"></i>GPS</div>
+        </div>
+        <div class="media-preview" id="prev-aero"></div>
+        <div class="gps-result" id="gps-aero"></div>
+      </div>
+      <button type="button" class="submit-btn sub-aeronautico" onclick="enviar('aeronautico','aero-lugar','aero-resena')"><i class="ti ti-send" style="margin-right:6px"></i>Enviar denuncia</button>
+    </div>
+
+    <!-- FORM MARITIMO -->
+    <div class="form-container" id="form-maritimo">
+      <div class="form-header fh-maritimo"><i class="ti ti-anchor"></i><span>Modo Marítimo / Fluvial / Lacustre</span></div>
+      <div class="field"><label>Suceso</label><select><option value="">Seleccioná...</option><option>Accidente</option><option>Incidente</option><option>Emergencia</option><option>Naufragio</option><option>Otro</option></select></div>
+      <div class="field"><label>Tipo de suceso</label><select><option value="">A confirmar</option><option>Colisión entre embarcaciones</option><option>Colisión con objeto fijo</option><option>Naufragio</option><option>Incendio</option><option>Fuga de carga</option></select></div>
+      <div class="field"><label>Fecha</label><input type="date" id="mar-fecha"/></div>
+      <div class="field"><label>Hora (ARG)</label><input type="time"/></div>
+      <div class="field"><label>Lugar del suceso</label><input type="text" id="mar-lugar" placeholder="Dirección/Km, barrio/ciudad (Provincia) / Millas Náuticas"/></div>
+      <div class="field"><label>Forma de notificación</label><select><option>Web</option><option>WhatsApp</option><option>Llamada</option><option>Otro</option></select></div>
+
+      <div class="field">
+  <label>Buque (Nombre de la embarcación)</label>
+  <input type="text" id="mar-buque" placeholder="Nombre de la embarcación"/>
+</div>
+
+<div class="field">
+  <label>N° OMI</label>
+  <input type="text" id="mar-omi" placeholder="A confirmar"/>
+</div>
+
+<div class="field">
+  <label>Bandera (País)</label>
+  <input type="text" id="mar-bandera" placeholder="País de bandera"/>
+</div>
+      
+<div class="field"><label>Heridos</label><select id="mar-heridos"><option>No reportados</option><option>A confirmar</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5 o más</option></select></div>
+      <div class="field"><label>Fallecidos</label><select id="mar-fallecidos"><option>No</option><option>A confirmar</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5 o más</option></select></div>
+        <div class="field"><label>Reseña</label><textarea id="mar-resena" placeholder="Indicá lo sucedido en pocas palabras..."></textarea></div>
+      <div class="media-upload-box">
+        <div class="media-upload-label">Adjuntar evidencia</div>
+        <div class="media-upload-row">
+          <label class="media-btn"><i class="ti ti-photo"></i>Foto<input type="file" accept="image/*" multiple onchange="previewMedia(this,'prev-mar')"/></label>
+          <label class="media-btn"><i class="ti ti-video"></i>Video<input type="file" accept="video/*" multiple onchange="previewMedia(this,'prev-mar')"/></label>
+          <div class="media-btn" onclick="getGPS('gps-mar')"><i class="ti ti-map-pin"></i>GPS</div>
+        </div>
+        <div class="media-preview" id="prev-mar"></div>
+        <div class="gps-result" id="gps-mar"></div>
+      </div>
+      <button type="button" class="submit-btn sub-maritimo" onclick="enviar('maritimo','mar-lugar','mar-resena')"><i class="ti ti-send" style="margin-right:6px"></i>Enviar denuncia</button>
+    </div>
+
+    <!-- FORM FERROVIARIO -->
+    <div class="form-container" id="form-ferroviario">
+      <div class="form-header fh-ferroviario"><i class="ti ti-train"></i><span>Modo Ferroviario</span></div>
+      <div class="field"><label>Suceso</label><select><option value="">Seleccioná...</option><option>Accidente</option><option>Incidente</option><option>Demora</option><option>Otro</option></select></div>
+      <div class="field"><label>Tipo de suceso</label><select><option value="">A confirmar</option><option>Choque</option><option>Descarrilamiento</option><option>Atropello</option><option>Incendio</option><option>Fuga de carga</option></select></div>
+      <div class="field"><label>Fecha</label><input type="date" id="ferro-fecha"/></div>
+      <div class="field"><label>Hora (ARG)</label><input type="time"/></div>
+      <div class="field"><label>Lugar del suceso</label><input type="text" id="ferro-lugar" placeholder="Dirección/Km, barrio/ciudad (Provincia)"/></div>
+      <div class="field"><label>Forma de notificación</label><select><option>Web</option><option>WhatsApp</option><option>Llamada</option><option>Otro</option></select></div>
+      <div class="field"><label>Tren N°</label><input type="text" id="ferro-tren" placeholder="Número del tren"/></div>
+
+<div class="field">
+  <label>Locomotora</label>
+<input type="text" id="ferro-locomotora" placeholder="Número de locomotora"/></div>
+      
+      <div class="field"><label>Operadora</label><select id="ferro-operadora"><option value="">Seleccioná...</option><option>SOF. SA.</option><option>Ferrovias</option><option>Metrovias S.A.C.</option><option>BCyL</option><option>Otra</option></select></div>
+      <div class="field"><label>Línea</label><select id="ferro-linea"><option value="">Seleccioná...</option><option>San Martín</option><option>Belgrano</option><option>Urquiza</option><option>Roca</option><option>Mitre</option></select></div>
+      <div class="field"><label>Heridos</label><select id="ferro-heridos"><option>No reportados</option><option>A confirmar</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5 o más</option></select></div>
+
+<div class="field">
+  <label>Fallecidos</label>
+  <select id="ferro-fallecidos">
+    <option>No reportados</option>
+    <option>A confirmar</option>
+    <option>1</option>
+    <option>2</option>
+    <option>3</option>
+    <option>4</option>
+    <option>5 o más</option>
+  </select>
+</div>
+      
+      <div class="field"><label>Reseña</label><textarea id="ferro-resena" placeholder="Indicá lo sucedido en pocas palabras..."></textarea></div>
+      <div class="media-upload-box">
+        <div class="media-upload-label">Adjuntar evidencia</div>
+        <div class="media-upload-row">
+          <label class="media-btn"><i class="ti ti-photo"></i>Foto<input type="file" accept="image/*" multiple onchange="previewMedia(this,'prev-ferro')"/></label>
+          <label class="media-btn"><i class="ti ti-video"></i>Video<input type="file" accept="video/*" multiple onchange="previewMedia(this,'prev-ferro')"/></label>
+          <div class="media-btn" onclick="getGPS('gps-ferro')"><i class="ti ti-map-pin"></i>GPS</div>
+        </div>
+        <div class="media-preview" id="prev-ferro"></div>
+        <div class="gps-result" id="gps-ferro"></div>
+      </div>
+      <button type="button" class="submit-btn sub-ferroviario" onclick="enviar('ferroviario','ferro-lugar','ferro-resena')"><i class="ti ti-send" style="margin-right:6px"></i>Enviar denuncia</button>
+    </div>
+  </div>
+
+  <!-- FEED -->
+  <div id="tab-feed" class="section">
+    <div class="notice"><i class="ti ti-info-circle"></i><span data-i18n="feed_notice">Solo se muestran denuncias aprobadas por moderadores.</span></div>
+    <div class="denuncia-card">
+      <div class="d-header"><div class="d-cat automotor"><i class="ti ti-car"></i> Automotor</div><span class="badge aprobado">Aprobado</span></div>
+      <div class="d-meta">Hoy 09:14 · Anónimo</div>
+      <div class="d-texto">Camión incendiado en la banquina. El conductor detectó chispas en el semirremolque y detuvo el vehículo a tiempo. Sin heridos, pérdidas totales.</div>
+      <div class="d-media">
+        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=150&h=150&fit=crop" onclick="openLightbox(this.src)"/>
+        <img src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=150&h=150&fit=crop" onclick="openLightbox(this.src)"/>
+      </div>
+      <div class="d-footer"><span class="d-loc"><i class="ti ti-map-pin"></i> Km 74, Autopista Rosario-Santa Fe</span></div>
+    </div>
+    <div class="denuncia-card">
+      <div class="d-header"><div class="d-cat automotor"><i class="ti ti-car"></i> Automotor</div><span class="badge aprobado">Aprobado</span></div>
+      <div class="d-meta">Hoy 07:52 · Anónimo</div>
+      <div class="d-texto">Choque entre camioneta Ford F-100 y camión con semirremolque. Conductor atrapado, rescatado por bomberos. Trasladado al Hospital Padilla.</div>
+      <div class="d-media">
+        <img src="https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=150&h=150&fit=crop" onclick="openLightbox(this.src)"/>
+        <div class="vid-thumb"><i class="ti ti-player-play"></i></div>
+      </div>
+      <div class="d-footer"><span class="d-loc"><i class="ti ti-map-pin"></i> Autopista Gral. San Martín, Tucumán</span></div>
+    </div>
+    <div class="denuncia-card">
+      <div class="d-header"><div class="d-cat maritimo"><i class="ti ti-anchor"></i> Marítimo / Fluvial</div><span class="badge aprobado">Aprobado</span></div>
+      <div class="d-meta">Ayer 18:30 · Carlos M.</div>
+      <div class="d-texto">Embarcación menor varada sobre el Río Paraná a la altura del puerto de Rosario. Intervino Prefectura Naval.</div>
+      <div class="d-footer"><span class="d-loc"><i class="ti ti-map-pin"></i> Río Paraná, Puerto Rosario</span></div>
+    </div>
+  </div>
+
+    
+    
+  
+
+  <!-- ADMIN -->
+  <div id="tab-admin" class="section">
+    <div id="admin-login-panel">
+      <div class="admin-login-box">
+        <h3><i class="ti ti-shield-lock"></i> Acceso solo para administradores</h3>
+        <input type="text" id="admin-user" placeholder="Usuario (email)"/>
+        <input type="password" id="admin-pass" placeholder="Contraseña"/>
+        <button type="button" onclick="loginAdmin()"><i class="ti ti-login"></i>Ingresar</button>
+      </div>
+    </div>
+    <div id="admin-panel" style="display:none">
+      <div class="admin-tabs">
+
+  <button type="button"
+          class="admin-tab active"
+          onclick="showAdminTab('sucesos',this)"
+          id="btn-tab-sucesos">
+    <i class="ti ti-list-details"></i> Sucesos
+  </button>
+
+  <button type="button"
+          class="admin-tab"
+          onclick="showAdminTab('colaboradores',this)"
+          id="btn-tab-colab">
+    <i class="ti ti-users"></i> Colaboradores
+  </button>
+
+</div>
+      <div id="atab-sucesos">
+        <div class="stats-row">
+          <div class="stat"><div class="stat-num" style="color:#854F0B" id="st-pend">3</div><div class="stat-label">Pendientes</div></div>
+          <div class="stat"><div class="stat-num" style="color:#3B6D11" id="st-apro">12</div><div class="stat-label">Aprobados</div></div>
+          <div class="stat"><div class="stat-num" style="color:#A32D2D" id="st-rech">2</div><div class="stat-label">Rechazados</div></div>
+        </div>
+        <div class="admin-card" id="ac1">
+          <div class="d-header"><div class="d-cat ferroviario"><i class="ti ti-train"></i> Ferroviario</div><span class="badge pendiente">Pendiente</span></div>
+          <div class="d-meta">Hoy 11:02 · Anónimo</div>
+          <div class="d-texto">Tren detenido por más de 40 minutos entre Palermo y Belgrano. Pasajeros evacuados a la vía.</div>
+          <div class="d-footer"><span class="d-loc"><i class="ti ti-map-pin"></i> Línea Mitre, CABA</span></div>
+          <div class="admin-actions">
+            <button type="button" class="btn-aprobar" onclick="moderar('ac1','aprobado')"><i class="ti ti-check"></i> Aprobar</button>
+            <button type="button" class="btn-rechazar" onclick="moderar('ac1','rechazado')"><i class="ti ti-x"></i> Rechazar</button>
+            <button type="button" class="btn-word" onclick="descargarWord('ferroviario','ac1')"><i class="ti ti-file-word"></i> Word</button>
+          </div>
+        </div>
+        <div class="admin-card" id="ac2">
+          <div class="d-header"><div class="d-cat aeronautico"><i class="ti ti-plane"></i> Aeronáutico</div><span class="badge pendiente">Pendiente</span></div>
+          <div class="d-meta">Hoy 08:45 · Martín R.</div>
+          <div class="d-texto">Avioneta realizó aterrizaje de emergencia en campo de cultivo cerca de Venado Tuerto. Sin heridos.</div>
+          <div class="d-footer"><span class="d-loc"><i class="ti ti-map-pin"></i> Venado Tuerto, Santa Fe</span></div>
+          <div class="admin-actions">
+            <button class="btn-aprobar" onclick="moderar('ac2','aprobado')"><i class="ti ti-check"></i> Aprobar</button>
+            <button class="btn-rechazar" onclick="moderar('ac2','rechazado')"><i class="ti ti-x"></i> Rechazar</button>
+            <button class="btn-word" onclick="descargarWord('aeronautico','ac2')"><i class="ti ti-file-word"></i> Word</button>
+          </div>
+        </div>
+        <div class="admin-card" id="ac3">
+          <div class="d-header"><div class="d-cat automotor"><i class="ti ti-car"></i> Automotor</div><span class="badge pendiente">Pendiente</span></div>
+          <div class="d-meta">Hoy 06:30 · Lucía P.</div>
+          <div class="d-texto">Choque múltiple en acceso norte. Camión + automóvil + motocicleta. Dos heridos trasladados.</div>
+          <div class="d-footer"><span class="d-loc"><i class="ti ti-map-pin"></i> Acceso Norte, Bs. As.</span></div>
+          <div class="admin-actions">
+            <button class="btn-aprobar" onclick="moderar('ac3','aprobado')"><i class="ti ti-check"></i> Aprobar</button>
+            <button class="btn-rechazar" onclick="moderar('ac3','rechazado')"><i class="ti ti-x"></i> Rechazar</button>
+            <button class="btn-word" onclick="descargarWord('automotor','ac3')"><i class="ti ti-file-word"></i> Word</button>
+          </div>
+        </div>
+      </div>
+      <div id="atab-colaboradores" style="display:none">
+        <div id="colab-only-principal" style="display:none">
+          <div class="create-admin-box">
+            <h3><i class="ti ti-user-plus"></i> Agregar colaborador</h3>
+            <input type="text" id="new-colab-email" placeholder="Email del colaborador"/>
+            <input type="password" id="new-colab-pass" placeholder="Contraseña temporal"/>
+          <button type="button" class="btn-crear-admin" onclick="crearColaborador()"><i class="ti ti-plus" style="margin-right:6px"></i>Agregar colaborador</button>
+          </div>
+        </div>
+        <p id="colab-no-perms" style="display:none;font-size:13px;color:var(--text2);text-align:center;padding:20px;background:var(--bg2);border-radius:var(--radius);"><i class="ti ti-lock" style="margin-right:6px"></i>No tienes permisos para gestionar colaboradores</p>
+        <div id="colab-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <strong>⚠️ <span data-i18n="footer_disclaimer">Página no oficial, a fines estadísticos.</span></strong><br>
+    <span data-i18n="footer_thanks">Gracias por su colaboración.</span><br>
+    ReportAR © 2026
+  </footer>
+</div>
+
+<button type="button" class="lightbox-close" onclick="closeLightbox()">
+  <i class="ti ti-x"></i>
+</button>
+  <img id="lightbox-img" src="" alt="imagen ampliada"/>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── EMAILJS CONFIG ───
+const EJS_SERVICE  = 'service_av9tqtj';
+const EJS_TEMPLATE = 'template_ktwnl6q';
+const EJS_PUBKEY   = 'EuBrPvcqqfnALwst6';
+const ADMIN_PRINCIPAL_EMAIL = 'reportarok@outlook.com';
+const ADMIN_PRINCIPAL_PASS  = 'ReportAR2026!';
+
+emailjs.init(EJS_PUBKEY);
+
+// ─── USUARIOS (admin principal + colaboradores) ───
+let usuarios = {
+  [ADMIN_PRINCIPAL_EMAIL]: { pass: ADMIN_PRINCIPAL_PASS, rol: 'principal' }
+};
+let colaboradoresEmails = [];
+let currentUser = null;
+let denunciasPendientes = [];
+  function renderDenunciasPendientes(){
+
+const contenedor = document.getElementById('atab-sucesos');
+
+denunciasPendientes.forEach((d,i)=>{
+
+
+if(document.getElementById('denuncia_'+i)) return;
+
+const card = document.createElement('div');
+
+card.className = 'admin-card';
+card.id = 'denuncia_'+i;
+
+card.innerHTML = `
+  <div class="d-header">
+    <div class="d-cat">
+      ${d.modo.toUpperCase()}
+    </div>
+    <span class="badge pendiente">Pendiente</span>
+  </div>
+
+  <div class="d-meta">
+    ${d.fecha}
+  </div>
+
+  <div class="d-texto">
+    ${d.resena}
+  </div>
+
+  <div class="d-footer">
+    <span class="d-loc">
+      <i class="ti ti-map-pin"></i>
+      ${d.lugar}
+    </span>
+  </div>
+
+  <div class="admin-actions">
+  <button class="btn-aprobar"
+    onclick="moderar('denuncia_${i}','aprobado')">
+    Aprobar
+  </button>
+
+  <button class="btn-rechazar"
+    onclick="moderar('denuncia_${i}','rechazado')">
+    Rechazar
+  </button>
+
+  <button class="btn-word"
+    onclick="descargarWord('${d.modo}','denuncia_${i}')">
+    Word
+  </button>
+</div>
+`;
+
+contenedor.appendChild(card);
+
+
+});
+}
+
+// ─── FECHA Y HORA ───
+function updateFecha() {
+  const d = new Date();
+  const dias = {es:['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'],en:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],fr:['Dim','Lun','Mar','Mer','Jeu','Ven','Sam']};
+  const meses = {es:['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'],en:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],fr:['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc']};
+  const lang = (typeof currentLang !== 'undefined') ? currentLang : 'es';
+  document.getElementById('fechaHoy').textContent = `${dias[lang][d.getDay()]} ${d.getDate()} ${meses[lang][d.getMonth()]} ${d.getFullYear()}`;
+}
+
+function updateHora() {
+  const n = new Date();
+  const h = document.getElementById("horaHoy");
+  if(h) h.textContent = n.toLocaleTimeString("es-AR", {
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false
+  });
+}
+
+
+// ─── IDIOMAS ───
+const i18n = {
+  es:{subtitle:'Plataforma de denuncia ciudadana de sucesos',nav_report:'Denunciar',nav_feed:'Sucesos',btn_wsp:'WhatsApp',select_mode:'Seleccioná el modo del suceso:',cat_auto:'Automotor',cat_auto_sub:'Accidentes viales',cat_aero:'Aeronáutico',cat_aero_sub:'Accidentes aéreos',cat_mar:'Marítimo / Fluvial',cat_mar_sub:'Embarcaciones',cat_ferro:'Ferroviario',cat_ferro_sub:'Trenes',form_auto:'Modo Automotor',lbl_suceso:'Suceso',lbl_tipo:'Tipo de suceso',feed_notice:'Solo se muestran denuncias aprobadas por moderadores.',qr_desc:'Escaneá el QR o compartí el link para denunciar desde tu celular.',footer_disclaimer:'Página no oficial, a fines estadísticos.',footer_thanks:'Gracias por su colaboración.'},
+  en:{subtitle:'Citizens incident reporting platform',nav_report:'Report',nav_feed:'Incidents',btn_wsp:'WhatsApp',select_mode:'Select incident mode:',cat_auto:'Road',cat_auto_sub:'Road accidents',cat_aero:'Aeronautical',cat_aero_sub:'Air accidents',cat_mar:'Maritime / Fluvial',cat_mar_sub:'Vessels',cat_ferro:'Railway',cat_ferro_sub:'Trains',form_auto:'Road Mode',lbl_suceso:'Incident',lbl_tipo:'Incident Type',feed_notice:'Only incidents approved by moderators are shown.',qr_desc:'Scan the QR or share the link to report from your phone.',footer_disclaimer:'Unofficial page, for statistical purposes.',footer_thanks:'Thank you for your collaboration.'},
+  fr:{subtitle:"Plateforme citoyenne de signalement d'incidents",nav_report:'Signaler',nav_feed:'Incidents',btn_wsp:'WhatsApp',select_mode:"Sélectionnez le mode:",cat_auto:'Automobile',cat_auto_sub:"Accidents de route",cat_aero:'Aéronautique',cat_aero_sub:'Accidents aériens',cat_mar:'Maritime / Fluvial',cat_mar_sub:'Navires',cat_ferro:'Ferroviaire',cat_ferro_sub:'Trains',form_auto:'Mode Automobile',lbl_suceso:'Incident',lbl_tipo:"Type d'incident",feed_notice:'Seuls les incidents approuvés par les modérateurs sont affichés.',qr_desc:'Scannez le QR ou partagez le lien pour signaler depuis votre téléphone.',footer_disclaimer:'Page non officielle, à titre statistique.',footer_thanks:'Merci pour votre collaboration.'}
+};
+let currentLang='es';
+
+updateFecha();
+updateHora();
+setInterval(updateFecha, 60000);
+setInterval(updateHora, 1000);
+// window.addEventListener('load', renderQR);
+function toggleLangMenu(){ document.getElementById('langMenu').classList.toggle('open'); }
+document.addEventListener('click',e=>{ if(!e.target.closest('.lang-btn')&&!e.target.closest('.lang-menu')) document.getElementById('langMenu').classList.remove('open'); });
+
+function setLang(lang,el){
+  currentLang=lang;
+  document.getElementById('langLabel').textContent=lang.toUpperCase();
+  document.querySelectorAll('.lang-opt').forEach(o=>o.classList.remove('active'));
+  if(el) el.classList.add('active');
+  document.getElementById('langMenu').classList.remove('open');
+  const t=i18n[lang];
+  document.querySelectorAll('[data-i18n]').forEach(el=>{ const k=el.getAttribute('data-i18n'); if(t[k]) el.textContent=t[k]; });
+  updateFecha();
+updateHora();
+}
+
+// ─── NAV ───
+function showTab(tab,btn){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  btn.classList.add('active');
+  if(tab==='qr') renderQR();
+}
+
+// ─── CATS ───
+function selCat(cat){
+  document.querySelectorAll('.cat-card').forEach(c=>c.classList.remove('sel'));
+  document.querySelector('.cat-card.'+cat).classList.add('sel');
+  document.querySelectorAll('.form-container').forEach(f=>f.classList.remove('active'));
+  document.getElementById('form-'+cat).classList.add('active');
+}
+
+// ─── VEHICULOS ───
+function agregarVehiculo(){
+  const list=document.getElementById('vehiculos-list');
+  const div=document.createElement('div');
+  div.className='vehiculo-row';
+  div.style.cssText='display:flex;gap:8px;margin-bottom:6px;';
+  div.innerHTML=`<select style="flex:1;padding:9px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;background:var(--bg);-webkit-appearance:none;"><option value="">Tipo...</option><option>Automóvil</option><option>Camioneta</option><option>Camión</option><option>Motocicleta</option><option>Bicicleta</option><option>Colectivo</option></select><input type="text" placeholder="Patente" style="width:110px;padding:9px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;background:var(--bg);"/>`;
+  list.appendChild(div);
+}
+
+// ─── MEDIA ───
+function previewMedia(input,previewId){
+  const preview=document.getElementById(previewId);
+  Array.from(input.files).forEach(file=>{
+    if(file.type.startsWith('image/')){const img=document.createElement('img');img.className='media-thumb';img.src=URL.createObjectURL(file);preview.appendChild(img);}
+    else if(file.type.startsWith('video/')){const div=document.createElement('div');div.style.cssText='width:56px;height:56px;background:#1a2744;border-radius:6px;display:flex;align-items:center;justify-content:center;';div.innerHTML='<i class="ti ti-player-play" style="color:#fff;font-size:28px;"></i>';preview.appendChild(div);}
+  });
+}
+
+// ─── GPS ───
+function getGPS(resultId){
+  const el=document.getElementById(resultId);
+  el.style.display='block'; el.textContent='Obteniendo ubicación...';
+  if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(
+      pos=>{el.textContent=`📍 Lat: ${pos.coords.latitude.toFixed(5)}, Lon: ${pos.coords.longitude.toFixed(5)}`;},
+      ()=>{el.textContent='⚠️ No se pudo obtener la ubicación GPS';el.style.color='var(--marron)';}
+    );
+  } else { el.textContent='GPS no disponible'; }
+}
+
+// ─── ENVIAR DENUNCIA + EMAIL ───
+function enviar(modo,lugarId,resenaId){
+  const lugar = document.getElementById(lugarId) ? document.getElementById(lugarId).value || 'No especificado' : 'No especificado';
+  const resena = document.getElementById(resenaId) ? document.getElementById(resenaId).value || 'Sin reseña' : 'Sin reseña';
+  const hoy = new Date().toLocaleDateString('es-AR');
+
+  denunciasPendientes.push({
+    modo: modo,
+    lugar: lugar,
+    resena: resena,
+    fecha: hoy,
+    estado: "pendiente"
+  });
+
+  renderDenunciasPendientes();
+
+  console.log("DENUNCIAS:", denunciasPendientes);
+
+  // Destinatarios: admin principal + colaboradores activos
+  const destinatarios = [ADMIN_PRINCIPAL_EMAIL, ...colaboradoresEmails];
+
+  destinatarios.forEach(email => {
+  emailjs.send(EJS_SERVICE, EJS_TEMPLATE, {
+  to_email: email,
+  modo: modo.charAt(0).toUpperCase() + modo.slice(1),
+  ubicacion: lugar,
+  mensaje: resena,
+  fecha: hoy,
+  reply_to: 'noreply@reportar.app'
+})
+.then(response => {
+  console.log("EMAIL ENVIADO:", response);
+})
+.catch(error => {
+  console.error("ERROR EMAILJS:", error);
+});
+});
+
+  showToast('✓ Gracias por su colaboración. La denuncia fue enviada y será revisada por un moderador.');
+}
+
+// ─── ADMIN LOGIN ───
+function loginAdmin(){
+  const u=document.getElementById('admin-user').value.trim();
+  const p=document.getElementById('admin-pass').value.trim();
+  if(usuarios[u]&&usuarios[u].pass===p){
+    currentUser={email:u, rol:usuarios[u].rol};
+    document.getElementById('admin-login-panel').style.display='none';
+    document.getElementById('admin-panel').style.display='block';
+    renderColabList();
+    renderDenunciasPendientes();
+  } else { 
+    showToast('⚠️ Usuario o contraseña incorrectos');
+  }
+}
+
+// ─── ADMIN TABS ───
+function showAdminTab(tab,btn){
+  document.getElementById('atab-sucesos').style.display=tab==='sucesos'?'block':'none';
+  document.getElementById('atab-colaboradores').style.display=tab==='colaboradores'?'block':'none';
+  document.querySelectorAll('.admin-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  if(tab==='colaboradores'){
+    const esPrincipal = currentUser&&currentUser.rol==='principal';
+    document.getElementById('colab-only-principal').style.display=esPrincipal?'block':'none';
+    document.getElementById('colab-no-perms').style.display=esPrincipal?'none':'block';
+    renderColabList();
+  }
+}
+
+// ─── COLABORADORES ───
+function crearColaborador(){
+  const email=document.getElementById('new-colab-email').value.trim();
+  const pass=document.getElementById('new-colab-pass').value.trim();
+  if(!email||!pass){showToast('Completá email y contraseña');return;}
+  if(usuarios[email]){showToast('Ese email ya existe');return;}
+  usuarios[email]={pass:pass,rol:'colaborador'};
+  colaboradoresEmails.push(email);
+  document.getElementById('new-colab-email').value='';
+  document.getElementById('new-colab-pass').value='';
+  renderColabList();
+  showToast('✓ Colaborador agregado: '+email);
+}
+
+function renderColabList(){
+  const list=document.getElementById('colab-list');
+  list.innerHTML='';
+  // Principal
+  const p=document.createElement('div');
+  p.className='colab-item';
+  p.innerHTML=`<span><i class="ti ti-user" style="margin-right:6px"></i>${ADMIN_PRINCIPAL_EMAIL}</span><span class="role-badge role-principal">Admin Principal</span>`;
+  list.appendChild(p);
+  // Colaboradores
+  colaboradoresEmails.forEach((email,i)=>{
+    const d=document.createElement('div');
+    d.className='colab-item';
+    const canDelete = currentUser&&currentUser.rol==='principal';
+    d.innerHTML=`<span><i class="ti ti-user" style="margin-right:6px"></i>${email}</span><div style="display:flex;gap:4px;align-items:center;"><span class="role-badge role-colab">Colaborador</span>${canDelete?`<button class="btn-eliminar-colab" onclick="eliminarColab('${email}')"><i class="ti ti-trash" style="margin-right:2px"></i>Eliminar</button>`:''}`;
+    list.appendChild(d);
+  });
+}
+
+function eliminarColab(email){
+  delete usuarios[email];
+  colaboradoresEmails=colaboradoresEmails.filter(e=>e!==email);
+  renderColabList();
+  showToast('Colaborador eliminado');
+}
+
+// ─── MODERAR ───
+let pend=3,apro=12,rech=2;
+function moderar(id,estado){
+  const card=document.getElementById(id);
+  const badge=card.querySelector('.badge');
+  badge.className='badge '+estado;
+  badge.textContent=estado.charAt(0).toUpperCase()+estado.slice(1);
+  const acts=card.querySelector('.admin-actions');
+  if(acts){const ba=acts.querySelector('.btn-aprobar');const br=acts.querySelector('.btn-rechazar');if(ba)ba.remove();if(br)br.remove();}
+  pend=Math.max(0,pend-1);
+  if(estado==='aprobado'){
+
+  apro++;
+
+  const texto = card.querySelector('.d-texto').innerHTML;
+  const lugar = card.querySelector('.d-loc').innerHTML;
+  const categoria = card.querySelector('.d-cat').innerHTML;
+
+  const feed = document.getElementById('tab-feed');
+
+  const nuevaDenuncia = document.createElement('div');
+  nuevaDenuncia.className = 'denuncia-card';
+
+  nuevaDenuncia.innerHTML = `
+    <div class="d-header">
+      <div class="d-cat">${categoria}</div>
+      <span class="badge aprobado">Aprobado</span>
+    </div>
+
+    <div class="d-meta">
+      ${new Date().toLocaleDateString('es-AR')} · Moderado
+    </div>
+
+    <div class="d-texto">
+      ${texto}
+    </div>
+
+    <div class="d-footer">
+      <span class="d-loc">${lugar}</span>
+    </div>
+  `;
+
+  feed.appendChild(nuevaDenuncia);
+
+}else{
+  rech++;
+}
+  
+  document.getElementById('st-pend').textContent=pend;
+  document.getElementById('st-apro').textContent=apro;
+  document.getElementById('st-rech').textContent=rech;
+  showToast(estado==='aprobado'?'✓ Suceso aprobado y publicado':'✗ Suceso rechazado');
+}
+
+// ─── WORD ───
+function descargarWord(modo,cardId){
+  const card=document.getElementById(cardId);
+  const texto=card.querySelector('.d-texto').textContent;
+  const loc=card.querySelector('.d-loc').textContent.trim();
+const hoy=new Date().toLocaleDateString('es-AR');
+
+  const heridos = document.getElementById('auto-heridos')?.value || 'A confirmar';
+ const fallecidos = document.getElementById('auto-fallecidos')?.value || 'A confirmar';
+const vehiculo = document.getElementById('auto-vehiculo')?.value || 'A confirmar';
+const patente = document.getElementById('auto-patente')?.value || 'A confirmar';
+  
+  
+const aeronave = document.getElementById('aero-aeronave')?.value || 'A confirmar';
+const matricula = document.getElementById('aero-matricula')?.value || 'A confirmar';
+const operador = document.getElementById('aero-operador')?.value || 'A confirmar';
+
+const tren = document.getElementById('ferro-tren')?.value || 'A confirmar';
+const locomotora = document.getElementById('ferro-locomotora')?.value || 'A confirmar';
+const operadora = document.getElementById('ferro-operadora')?.value || 'A confirmar';
+const linea = document.getElementById('ferro-linea')?.value || 'A confirmar';
+const ferroHeridos = document.getElementById('ferro-heridos')?.value || 'A confirmar';
+const ferroFallecidos = document.getElementById('ferro-fallecidos')?.value || 'A confirmar';
+
+const buque = document.getElementById('mar-buque')?.value || 'A confirmar';
+const omi = document.getElementById('mar-omi')?.value || 'A confirmar';
+const bandera = document.getElementById('mar-bandera')?.value || 'A confirmar';
+const marHeridos = document.getElementById('mar-heridos')?.value || 'A confirmar';
+const marFallecidos = document.getElementById('mar-fallecidos')?.value || 'A confirmar';
+
+
+const fichas={
+automotor:`MODO: AUTOMOTOR
+SUCESO: Accidente
+FECHA: ${hoy}
+LUGAR: ${loc}
+FORMA DE NOTIFICACIÓN: Web
+VEHÍCULO/S: ${vehiculo}
+DOMINIO/S: ${patente}
+HERIDOS: ${heridos}
+FALLECIDOS: ${fallecidos}
+RESEÑA: ${texto}`,
+  
+aeronautico:`MODO: AERONÁUTICO
+SUCESO: Accidente
+FECHA: ${hoy}
+LUGAR: ${loc}
+FORMA DE NOTIFICACIÓN: Web
+AERONAVE: ${aeronave}
+MATRÍCULA: ${matricula}
+OPERADOR: ${operador}
+HERIDOS: A confirmar
+FALLECIDOS: No
+RESEÑA: ${texto}`,   
+  
+maritimo:`MODO: MARÍTIMO / FLUVIAL / LACUSTRE
+SUCESO: Accidente
+FECHA: ${hoy}
+LUGAR: ${loc}
+FORMA DE NOTIFICACIÓN: Web
+BUQUE: ${buque}
+N° OMI: ${omi}
+BANDERA: ${bandera}
+HERIDOS: ${marHeridos}
+FALLECIDOS: ${marFallecidos}
+RESEÑA: ${texto}`,
+  
+ferroviario:`MODO: FERROVIARIO
+SUCESO: Accidente
+FECHA: ${hoy}
+LUGAR: ${loc}
+FORMA DE NOTIFICACIÓN: Web
+TREN N°: ${tren}
+LOCOMOTORA: ${locomotora}
+OPERADORA: ${operadora}
+LÍNEA: ${linea}
+HERIDOS: ${ferroHeridos}
+FALLECIDOS: ${ferroFallecidos}
+RESEÑA: ${texto}`  };
+  
+  const contenido=fichas[modo]||fichas.automotor;
+  const html=`<html><head><meta charset='UTF-8'></head><body style='font-family:Arial;font-size:14px;line-height:2;padding:40px;'><h2 style='color:#1a2744;border-bottom:2px solid #1a2744;padding-bottom:10px;'>ReportAR - Ficha de ${modo.toUpperCase()}</h2><pre style='white-space:pre-wrap;word-wrap:break-word;'>${contenido}</pre></body></html>`;
+  const blob=new Blob([html],{type:'application/msword'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download=`ReportAR_${modo}_${hoy.replace(/\//g,'-')}.doc`;
+  a.click();URL.revokeObjectURL(url);
+  showToast('✓ Ficha descargada en Word');
+}
+
+// ─── QR ───
+let qrRendered=false;
+function renderQR(){
+  if(qrRendered)return;
+  try{
+    new QRCode(document.getElementById('headerQR'),{
+      text:'https://wa.me/5491139267174?text=Hola%2C%20quiero%20hacer%20la%20denuncia%20de%20un%20Suceso',
+      width:70,
+      height:70,
+      colorDark:'#1a2744',
+      colorLight:'#ffffff',
+      correctLevel:QRCode.CorrectLevel.H
+    });
+    qrRendered=true;
+  }catch(e){}
+}
+function JSTLink(){window.open('https://www.argentina.gob.ar/jst','_blank');}
+function compartirWsp(){window.open('https://wa.me/?text=Denunciá%20en%20ReportAR%3A%20https%3A%2F%2Freportar.netlify.app','_blank');}
+function descargarQR(){const canvas=document.querySelector('#qrCanvas canvas');if(!canvas)return;const a=document.createElement('a');a.download='ReportAR-QR.png';a.href=canvas.toDataURL();a.click();}
+
+// ─── LIGHTBOX ───
+function openLightbox(src){document.getElementById('lightbox-img').src=src;document.getElementById('lightbox').classList.add('open');}
+function closeLightbox(){document.getElementById('lightbox').classList.remove('open');}
+
+// ─── TOAST ───
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.style.display='block';
+  setTimeout(()=>{t.style.display='none';},2800);
+}
+
+renderQR();
+</script>
