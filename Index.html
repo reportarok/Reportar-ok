@@ -898,6 +898,30 @@ function enviar(modo,lugarId,resenaId){
 });
 });
 
+fetch("https://script.google.com/macros/s/AKfycbx8vWErcL_Th2b290_UPsjAoYkZBHaun_5qEan7HJh9OgKwtvTx4YcFVYCNRy0kRjTK/exec", {
+  method: "POST",
+  body: JSON.stringify({
+    modo: modo,
+    tipo: tipo || "No especificado",
+    ubicacion: lugar,
+    resena: resena,
+    fecha: hoy,
+    nombre: "No especificado",
+    email: "No especificado"
+  }),
+  headers: {
+    "Content-Type": "application/json"
+  }
+})
+.then(res => res.json())
+.then(data => {
+  console.log("ENVIADO A GOOGLE SHEETS:", data);
+})
+.catch(err => {
+  console.error("ERROR GOOGLE SHEETS:", err);
+});
+  
+  
   showToast('✓ Gracias por su colaboración. La denuncia fue enviada y será revisada por un moderador.');
 }
 
