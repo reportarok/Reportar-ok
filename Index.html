@@ -898,6 +898,8 @@ function enviar(modo,lugarId,resenaId){
 });
 });
 
+console.log("VOY A ENVIAR A GOOGLE SHEETS");
+  
 fetch("https://script.google.com/macros/s/AKfycbx8vWErcL_Th2b290_UPsjAoYkZBHaun_5qEan7HJh9OgKwtvTx4YcFVYCNRy0kRjTK/exec", {
   method: "POST",
   body: JSON.stringify({
