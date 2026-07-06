@@ -786,6 +786,40 @@ function updateHora() {
 
 // ─── IDIOMAS ───
 const i18n = {
+  const optionsI18n = {
+  es: {
+    "Accidente":"Accidente",
+    "Incidente":"Incidente",
+    "Emergencia":"Emergencia",
+    "Otro":"Otro",
+    "Seleccioná...":"Seleccioná...",
+    "A confirmar":"A confirmar",
+    "No reportados":"No reportados",
+    "No":"No"
+  },
+
+  en: {
+    "Accidente":"Accident",
+    "Incidente":"Incident",
+    "Emergencia":"Emergency",
+    "Otro":"Other",
+    "Seleccioná...":"Select...",
+    "A confirmar":"To be confirmed",
+    "No reportados":"None reported",
+    "No":"No"
+  },
+
+  fr: {
+    "Accidente":"Accident",
+    "Incidente":"Incident",
+    "Emergencia":"Urgence",
+    "Otro":"Autre",
+    "Seleccioná...":"Sélectionner...",
+    "A confirmar":"À confirmer",
+    "No reportados":"Aucun signalé",
+    "No":"Non"
+  }
+};
   es:{subtitle:'Plataforma de denuncia ciudadana de sucesos',nav_report:'Denunciar',nav_feed:'Sucesos',btn_wsp:'WhatsApp',select_mode:'Seleccioná el modo del suceso:',cat_auto:'Automotor',cat_auto_sub:'Accidentes viales',cat_aero:'Aeronáutico',cat_aero_sub:'Accidentes aéreos',cat_mar:'Marítimo / Fluvial',cat_mar_sub:'Embarcaciones',cat_ferro:'Ferroviario',cat_ferro_sub:'Trenes',form_auto:'Modo Automotor',lbl_suceso:'Suceso',lbl_tipo:'Tipo de suceso',feed_notice:'Solo se muestran denuncias aprobadas por moderadores.',qr_desc:'Escaneá el QR o compartí el link para denunciar desde tu celular.',footer_disclaimer:'Página no oficial, a fines estadísticos.',footer_thanks:'Gracias por su colaboración.'},
   en:{subtitle:'Citizens incident reporting platform',nav_report:'Report',nav_feed:'Incidents',btn_wsp:'WhatsApp',select_mode:'Select incident mode:',cat_auto:'Road',cat_auto_sub:'Road accidents',cat_aero:'Aeronautical',cat_aero_sub:'Air accidents',cat_mar:'Maritime / Fluvial',cat_mar_sub:'Vessels',cat_ferro:'Railway',cat_ferro_sub:'Trains',form_auto:'Road Mode',lbl_suceso:'Incident',lbl_tipo:'Incident Type',feed_notice:'Only incidents approved by moderators are shown.',qr_desc:'Scan the QR or share the link to report from your phone.',footer_disclaimer:'Unofficial page, for statistical purposes.',footer_thanks:'Thank you for your collaboration.'},
   fr:{subtitle:"Plateforme citoyenne de signalement d'incidents",nav_report:'Signaler',nav_feed:'Incidents',btn_wsp:'WhatsApp',select_mode:"Sélectionnez le mode:",cat_auto:'Automobile',cat_auto_sub:"Accidents de route",cat_aero:'Aéronautique',cat_aero_sub:'Accidents aériens',cat_mar:'Maritime / Fluvial',cat_mar_sub:'Navires',cat_ferro:'Ferroviaire',cat_ferro_sub:'Trains',form_auto:'Mode Automobile',lbl_suceso:'Incident',lbl_tipo:"Type d'incident",feed_notice:'Seuls les incidents approuvés par les modérateurs sont affichés.',qr_desc:'Scannez le QR ou partagez le lien pour signaler depuis votre téléphone.',footer_disclaimer:'Page non officielle, à titre statistique.',footer_thanks:'Merci pour votre collaboration.'}
@@ -806,10 +840,26 @@ function setLang(lang,el){
   document.querySelectorAll('.lang-opt').forEach(o=>o.classList.remove('active'));
   if(el) el.classList.add('active');
   document.getElementById('langMenu').classList.remove('open');
+
   const t=i18n[lang];
-  document.querySelectorAll('[data-i18n]').forEach(el=>{ const k=el.getAttribute('data-i18n'); if(t[k]) el.textContent=t[k]; });
+
+  // Traduce elementos con data-i18n
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const k=el.getAttribute('data-i18n');
+    if(t[k]) el.textContent=t[k];
+  });
+
+  // Traduce todas las opciones de los select
+  document.querySelectorAll("option").forEach(op=>{
+    const txt = op.textContent.trim();
+
+    if(optionsI18n[lang] && optionsI18n[lang][txt]){
+      op.textContent = optionsI18n[lang][txt];
+    }
+  });
+
   updateFecha();
-updateHora();
+  updateHora();
 }
 
 // ─── NAV ───
