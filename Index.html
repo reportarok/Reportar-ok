@@ -912,6 +912,62 @@ const i18n = {
 
 let currentLang='es';
 
+function toggleLangMenu(){
+  document.getElementById("langMenu").classList.toggle("open");
+}
+
+document.addEventListener("click",function(e){
+  if(!e.target.closest(".lang-btn") && !e.target.closest(".lang-menu")){
+    document.getElementById("langMenu").classList.remove("open");
+  }
+});
+
+function setLang(lang,el){
+
+  currentLang=lang;
+
+  document.getElementById("langLabel").textContent=lang.toUpperCase();
+
+  document.querySelectorAll(".lang-opt").forEach(o=>{
+    o.classList.remove("active");
+  });
+
+  if(el) el.classList.add("active");
+
+  document.getElementById("langMenu").classList.remove("open");
+
+  const t=i18n[lang];
+
+  document.querySelectorAll("[data-i18n]").forEach(item=>{
+    const key=item.dataset.i18n;
+    if(t[key]) item.textContent=t[key];
+  });
+
+  document.querySelectorAll("select option").forEach(op=>{
+
+    if(!op.dataset.original){
+      op.dataset.original=op.textContent.trim();
+    }
+
+    const original=op.dataset.original;
+
+    if(optionsI18n[lang][original]){
+      op.textContent=optionsI18n[lang][original];
+    }
+
+  });
+
+  updateFecha();
+  updateHora();
+}
+
+updateFecha();
+updateHora();
+
+setInterval(updateFecha,60000);
+setInterval(updateHora,1000);
+  
+  
 // ─── NAV ───
 function showTab(tab,btn){
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
