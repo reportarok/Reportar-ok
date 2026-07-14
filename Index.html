@@ -332,10 +332,20 @@
 }
 
 .lang-menu{
+    display:none;
     position:absolute;
     top:110%;
     right:0;
+    min-width:150px;
+    background:#fff;
+    border:1px solid #ddd;
+    border-radius:10px;
+    box-shadow:0 8px 20px rgba(0,0,0,.15);
     z-index:9999;
+}
+
+.lang-menu.open{
+    display:block;
 }
   
   
@@ -369,6 +379,8 @@
         </div>
     </div>
 </div>
+</div>
+        
   <nav class="nav">
     <button class="active" onclick="showTab('denunciar',this)"><i class="ti ti-plus"></i><span data-i18n="nav_report">Denunciar</span></button>
     <button onclick="showTab('feed',this)"><i class="ti ti-news"></i><span data-i18n="nav_feed">Sucesos</span></button>
