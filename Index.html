@@ -355,33 +355,38 @@
   <div class="app-shell">
   
     <div class="header">
-      <div class="header-top">
-        <div id="headerQR" style="width:70px;height:70px;background:#fff;padding:4px;border-radius:8px;display:flex;align-items:center;justify-content:center;"></div>
-        <div class="header-title">
-          <h1><i class="ti ti-alert-triangle"></i> ReportAR</h1>
-          <p data-i18n="subtitle">Plataforma de denuncia ciudadana de sucesos</p>
-        </div>
-  
-       <div class="header-right">
-    <div class="fecha-badge" id="fechaHoy"></div>
-    <div class="fecha-badge" id="horaHoy"></div>
+  <div class="header-top">
+    <div id="headerQR" style="width:70px;height:70px;background:#fff;padding:4px;border-radius:8px;display:flex;align-items:center;justify-content:center;"></div>
 
-    <div class="lang-selector">
+    <div class="header-title">
+      <h1><i class="ti ti-alert-triangle"></i> ReportAR</h1>
+      <p data-i18n="subtitle">Plataforma de denuncia ciudadana de sucesos</p>
+    </div>
+
+    <div class="header-right">
+      <div class="fecha-badge" id="fechaHoy"></div>
+      <div class="fecha-badge" id="horaHoy"></div>
+
+      <div class="lang-selector">
         <button class="lang-btn" onclick="toggleLangMenu()">
-            <i class="ti ti-world"></i>
-            <span id="langLabel">ES</span>
+          <i class="ti ti-world"></i>
+          <span id="langLabel">ES</span>
         </button>
 
         <div class="lang-menu" id="langMenu">
-            <div class="lang-opt active" onclick="setLang('es',this)">🇦🇷 Español</div>
-            <div class="lang-opt" onclick="setLang('en',this)">🇺🇸 English</div>
-            <div class="lang-opt" onclick="setLang('fr',this)">🇫🇷 Français</div>
+          <div class="lang-opt active" onclick="setLang('es',this)">🇦🇷 Español</div>
+          <div class="lang-opt" onclick="setLang('en',this)">🇺🇸 English</div>
+          <div class="lang-opt" onclick="setLang('fr',this)">🇫🇷 Français</div>
         </div>
+      </div>
+
     </div>
+  </div>
 </div>
-</div>
-        
-  <nav class="nav">
+
+<nav class="nav">
+
+    
     <button class="active" onclick="showTab('denunciar',this)"><i class="ti ti-plus"></i><span data-i18n="nav_report">Denunciar</span></button>
     <button onclick="showTab('feed',this)"><i class="ti ti-news"></i><span data-i18n="nav_feed">Sucesos</span></button>
     
